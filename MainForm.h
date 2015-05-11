@@ -9,6 +9,7 @@
 #include <Forms.hpp>
 #include <ExtCtrls.hpp>
 #include <Graphics.hpp>
+#include <ComCtrls.hpp>
 //---------------------------------------------------------------------------
 class TFormMain : public TForm
 {
@@ -18,6 +19,7 @@ __published:	// IDE-managed Components
         TPanel *pnlimg;
         TPanel *pnlcn;
         TImage *imglock;
+        TStatusBar *stat;
         void __fastcall tmrTimer(TObject *Sender);
         void __fastcall FormCreate(TObject *Sender);
         void __fastcall FormClose(TObject *Sender, TCloseAction &Action);

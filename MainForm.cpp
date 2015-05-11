@@ -54,6 +54,7 @@ void __fastcall TFormMain::tmrTimer(TObject *Sender)
 
        //获取当前鼠标位置
        GetCursorPos(&pt);
+       stat->Panels->Items[0]->Text = IntToStr(pt.x)+","+IntToStr(pt.y);
 
        HWND hCurrentWin=WindowFromPoint(pt);
        if(hCurrentWin==this->Handle || hCurrentWin==pnlcn->Handle
@@ -68,6 +69,7 @@ void __fastcall TFormMain::tmrTimer(TObject *Sender)
        r=GetRValue(clr);
        AnsiString str = IntToHex(r,2) + IntToHex(g,2) + IntToHex(b,2);
        pnlcn->Caption = "#"+str;
+       stat->Panels->Items[1]->Text = "#"+str;
        str = IntToHex(b,2) + IntToHex(g,2) + IntToHex(r,2);
        pnlcn->Font->Color = StrToInt("$00"+str);
        str = IntToHex(255-b,2) + IntToHex(255-g,2) + IntToHex(255-r,2);

@@ -1,6 +1,6 @@
 object FormMain: TFormMain
-  Left = 1002
-  Top = 323
+  Left = 570
+  Top = 167
   Width = 225
   Height = 250
   BorderIcons = [biSystemMenu, biMinimize, biHelp]
@@ -107,6 +107,20 @@ object FormMain: TFormMain
     BevelOuter = bvNone
     TabOrder = 1
     OnClick = pnlimgClick
+    object stat: TStatusBar
+      Left = 0
+      Top = 144
+      Width = 209
+      Height = 19
+      Panels = <
+        item
+          Width = 100
+        end
+        item
+          Width = 50
+        end>
+      SimplePanel = False
+    end
   end
   object tmr: TTimer
     OnTimer = tmrTimer
