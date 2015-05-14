@@ -18,42 +18,30 @@ object FormMain: TFormMain
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlinfo: TPanel
+  object pnlInfo: TPanel
     Left = 0
     Top = 0
     Width = 209
-    Height = 49
+    Height = 66
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    object pnlcn: TPanel
-      Left = 0
+    object pnlColor: TPanel
+      Left = 144
       Top = 0
-      Width = 209
-      Height = 49
-      Cursor = crHandPoint
-      Hint = #28857#20987#22797#21046#39068#33394#20540
-      Align = alClient
+      Width = 65
+      Height = 66
+      Align = alRight
       BevelOuter = bvNone
-      Caption = '#000000'
-      Font.Charset = GB2312_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -24
-      Font.Name = #24494#36719#38597#40657
-      Font.Style = [fsBold]
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = True
       TabOrder = 0
-      OnClick = pnlcnClick
       DesignSize = (
-        209
-        49)
-      object imglock: TImage
-        Left = 170
-        Top = 16
-        Width = 32
-        Height = 32
+        65
+        66)
+      object imgLock: TImage
+        Left = 44
+        Top = 44
+        Width = 16
+        Height = 16
         Anchors = [akRight, akBottom]
         AutoSize = True
         Picture.Data = {
@@ -97,19 +85,90 @@ object FormMain: TFormMain
         Transparent = True
       end
     end
+    object pnlColorValue: TPanel
+      Left = 0
+      Top = 0
+      Width = 144
+      Height = 66
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      object pnlRGB: TPanel
+        Left = 0
+        Top = 0
+        Width = 144
+        Height = 22
+        Cursor = crHandPoint
+        Hint = #28857#20987#22797#21046#39068#33394#20540
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'RGB'
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = #24494#36719#38597#40657
+        Font.Style = []
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+        OnClick = pnlRGBClick
+      end
+      object pnlHSB: TPanel
+        Left = 0
+        Top = 44
+        Width = 144
+        Height = 22
+        Cursor = crHandPoint
+        Hint = #28857#20987#22797#21046#39068#33394#20540
+        Align = alClient
+        BevelOuter = bvNone
+        Caption = 'HSB'
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = #24494#36719#38597#40657
+        Font.Style = []
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 1
+        OnClick = pnlRGBClick
+      end
+      object pnlCMYK: TPanel
+        Left = 0
+        Top = 22
+        Width = 144
+        Height = 22
+        Cursor = crHandPoint
+        Hint = #28857#20987#22797#21046#39068#33394#20540
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'CMYK'
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = #24494#36719#38597#40657
+        Font.Style = []
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        OnClick = pnlRGBClick
+      end
+    end
   end
-  object pnlimg: TPanel
+  object pnlIMG: TPanel
     Left = 0
-    Top = 49
+    Top = 66
     Width = 209
-    Height = 163
+    Height = 146
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
-    OnClick = pnlimgClick
     object stat: TStatusBar
       Left = 0
-      Top = 144
+      Top = 127
       Width = 209
       Height = 19
       Panels = <
@@ -124,7 +183,7 @@ object FormMain: TFormMain
   end
   object tmr: TTimer
     OnTimer = tmrTimer
-    Left = 128
-    Top = 112
+    Left = 144
+    Top = 144
   end
 end

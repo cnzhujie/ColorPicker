@@ -15,7 +15,17 @@ __fastcall TFormMain::TFormMain(TComponent* Owner)
 }  
 //---------------------------------------------------------------------------
 void __fastcall TFormMain::FormCreate(TObject *Sender)
-{       
+{
+        crossCenter.x = crossCenter.y = 0;
+        CW = 30;
+        CH = 30;
+        //将桌面的DC复制到内存DC
+        HDC hDeskTopDC=CreateDC("DISPLAY",NULL,NULL,NULL);
+        hMemDC=CreateCompatibleDC(hDeskTopDC);
+        hBitMapMem=CreateCompatibleBitmap(hDeskTopDC,CW,CH);
+        SelectObject(hMemDC,hBitMapMem);
+        DeleteDC(hDeskTopDC);
+        
         //窗口最上
         SetForegroundWindow(this->Handle);
         SetWindowPos(this->Handle,HWND_TOPMOST,0,0,0,0,SWP_SHOWWINDOW|SWP_NOMOVE|SWP_NOSIZE);
@@ -31,69 +41,79 @@ void __fastcall TFormMain::FormClose(TObject *Sender, TCloseAction &Action)
 {
       //注销钩子
       UnhookWindowsHookEx(hKBHook);
+      
+      DeleteDC(hMemDC);
+      DeleteObject(hBitMapMem);
 }
 //---------------------------------------------------------------------------
 void TFormMain::startWatch()
 {//开始检测鼠标移动
-        imglock->Hide();
+        imgLock->Hide();
         tmr->Interval = 100;
         tmr->Enabled = True;
 }
 //---------------------------------------------------------------------------
 void TFormMain::endWatch()
 {//停止检测鼠标移动
-        imglock->Show();
+        imgLock->Show();
         tmr->Enabled = false;
 }
 //---------------------------------------------------------------------------
 void __fastcall TFormMain::tmrTimer(TObject *Sender)
-{//鼠标移动检测
-       static int x,y,cx,cy; 
-       static POINT pt,pt2;
-       static int b,g,r;
+{//鼠标移动检测      
+       static int x,y,cx,cy;
+       static POINT pt,lastpt;
 
        //获取当前鼠标位置
        GetCursorPos(&pt);
+       if(pt.x == lastpt.x && pt.y==lastpt.y)return;
+       lastpt = pt;
        stat->Panels->Items[0]->Text = IntToStr(pt.x)+","+IntToStr(pt.y);
-
-       HWND hCurrentWin=WindowFromPoint(pt);
-       if(hCurrentWin==this->Handle || hCurrentWin==pnlcn->Handle
-                || hCurrentWin==pnlimg->Handle)return;
-
-       //获取桌面hdc
+       //获取鼠标处的图像
        HDC hDeskTopDC=CreateDC("DISPLAY",NULL,NULL,NULL);
-       //获取当前鼠标点像素值
-       COLORREF clr = GetPixel(hDeskTopDC, pt.x, pt.y);
-       b=GetBValue(clr);
-       g=GetGValue(clr);
-       r=GetRValue(clr);
-       AnsiString str = IntToHex(r,2) + IntToHex(g,2) + IntToHex(b,2);
-       pnlcn->Caption = "#"+str;
-       stat->Panels->Items[1]->Text = "#"+str;
-       str = IntToHex(b,2) + IntToHex(g,2) + IntToHex(r,2);
-       pnlcn->Font->Color = StrToInt("$00"+str);
-       str = IntToHex(255-b,2) + IntToHex(255-g,2) + IntToHex(255-r,2);
-       pnlcn->Color = StrToInt("$00"+str); 
 
-       //显示鼠标附近的图像
-       HDC hImgCursorDC = GetDC(pnlimg->Handle);
-       cx = pnlimg->Width/2;
-       cy = pnlimg->Height/2;
+       //获取鼠标附近的图像
+       cx = pnlIMG->Width/2;
+       cy = pnlIMG->Height/2;
        x = pt.x - CW/2;
        y = pt.y - CH/2;
        if(x<0)
-       {        
-            cx+=x*pnlimg->Width/CW;
-            x=0;
+       {
+             cx+=x*pnlIMG->Width/CW;
+             x=0;
        }
        if(y<0)
-       {        
-            cy+=y*pnlimg->Height/CH;
-            y=0;
+       {
+             cy+=y*pnlIMG->Height/CH;
+             y=0;
        }
-       StretchBlt(hImgCursorDC,0,0,pnlimg->Width,pnlimg->Height,hDeskTopDC,x,y,CW,CH,SRCCOPY | CAPTUREBLT);//如果最后一个参数只是SRCCOPY的话，不能截到半透明窗体,参数CAPTUREBLT的意思就是包含半透明窗体
-       //绘制鼠标位置
-       HPEN hPen=CreatePen(PS_SOLID,1,RGB(255-r,255-g,255-b));
+       BitBlt(hMemDC,0,0,pnlIMG->Width,pnlIMG->Height,hDeskTopDC,x,y,SRCCOPY | CAPTUREBLT);
+       //StretchBlt(hMemDC,0,0,pnlimg->Width,pnlimg->Height,hDeskTopDC,x,y,CW,CH,SRCCOPY | CAPTUREBLT);//如果最后一个参数只是SRCCOPY的话，不能截到半透明窗体,参数CAPTUREBLT的意思就是包含半透明窗体
+       DeleteDC(hDeskTopDC);
+       //显示
+       showCursorImg(cx,cy);
+}
+//---------------------------------------------------------------------------
+
+void TFormMain::showCursorImg(int cx,int cy)
+{      
+       static POINT pt2;
+       crossCenter.x = cx;
+       crossCenter.y = cy;
+       HDC hImgCursorDC = GetDC(pnlIMG->Handle);
+
+       StretchBlt(hImgCursorDC,0,0,pnlIMG->Width,pnlIMG->Height,hMemDC,0,0,CW,CH,SRCCOPY | CAPTUREBLT);//如果最后一个参数只是SRCCOPY的话，不能截到半透明窗体,参数CAPTUREBLT的意思就是包含半透明窗体
+
+       //获取鼠标处的颜色值
+       color.setColor( GetPixel(hImgCursorDC, cx, cy )); 
+       //显示像素值
+       pnlRGB->Caption = color.getRGB();
+       pnlHSB->Caption = color.getHSB();
+       pnlCMYK->Caption = color.getCMYK();
+       stat->Panels->Items[1]->Text = color.getRGB();
+       pnlColor->Color = color.getTColor();
+
+       HPEN hPen=CreatePen(PS_SOLID,1,RGB(255-color.r,255-color.g,255-color.b));
        HPEN hPenOld = ( HPEN )SelectObject(hImgCursorDC,hPen);
        
        pt2.x = cx; pt2.y = cy - 2;
@@ -116,40 +136,12 @@ void __fastcall TFormMain::tmrTimer(TObject *Sender)
        SelectObject (hImgCursorDC , hPenOld);
        DeleteObject ( hPen );
        //释放dc
-       ReleaseDC(pnlimg->Handle,hImgCursorDC);
-       DeleteDC(hDeskTopDC);
-} 
-//---------------------------------------------------------------------------
-
-void __fastcall TFormMain::pnlimgClick(TObject *Sender)
-{//点击
-       static POINT pt;
-       static int b,g,r;
-       //获取当前鼠标位置
-       GetCursorPos(&pt);
-       
-       //获取桌面hdc
-       HDC hDeskTopDC=CreateDC("DISPLAY",NULL,NULL,NULL);
-       //获取当前鼠标点像素值
-       COLORREF clr = GetPixel(hDeskTopDC, pt.x, pt.y);
-       b=GetBValue(clr);
-       g=GetGValue(clr);
-       r=GetRValue(clr);
-       AnsiString str = IntToHex(r,2) + IntToHex(g,2) + IntToHex(b,2);
-       pnlcn->Caption = "#"+str;
-       str = IntToHex(b,2) + IntToHex(g,2) + IntToHex(r,2);
-       pnlcn->Font->Color = StrToInt("$00"+str);
-       str = IntToHex(255-b,2) + IntToHex(255-g,2) + IntToHex(255-r,2);
-       pnlcn->Color = StrToInt("$00"+str);
-
-       DeleteDC(hDeskTopDC);
-
-       copyColor();
+       ReleaseDC(pnlIMG->Handle,hImgCursorDC);
 }
 //---------------------------------------------------------------------------
-void __fastcall TFormMain::pnlcnClick(TObject *Sender)
+void __fastcall TFormMain::pnlRGBClick(TObject *Sender)
 {//复制颜色值
-            copyColor();
+       copyColor();
 }
 //=====================================================================
 void TFormMain::copyColor()
@@ -159,7 +151,7 @@ void TFormMain::copyColor()
              ShowMessage("复制失败");
              return;
         }
-        AnsiString str = pnlcn->Caption;
+        AnsiString str = color.getRGB();
         //根据环境变量获取数据长度
         size_t cbStr = (str.Length() + 1) * sizeof(char);
 
@@ -219,31 +211,23 @@ LRESULT CALLBACK KB_Hook_fn(int nCode,WPARAM wParam,LPARAM lParam)
             }
             else if(pkbHookStruct->vkCode==VK_UP)
             {
-                 POINT pt;
-                 GetCursorPos(&pt);
-                 pt.y-=1;
-                 SetCursorPos(pt.x,pt.y);
+                 FormMain->crossCenter.y-=1;
+                 FormMain->showCursorImg(FormMain->crossCenter.x,FormMain->crossCenter.y);
             }
             else if(pkbHookStruct->vkCode==VK_DOWN)
-            { 
-                 POINT pt;
-                 GetCursorPos(&pt);
-                 pt.y+=1;
-                 SetCursorPos(pt.x,pt.y);
+            {
+                 FormMain->crossCenter.y+=1;
+                 FormMain->showCursorImg(FormMain->crossCenter.x,FormMain->crossCenter.y);
             }
             else if(pkbHookStruct->vkCode==VK_LEFT)
-            {   
-                 POINT pt;
-                 GetCursorPos(&pt);
-                 pt.x-=1;
-                 SetCursorPos(pt.x,pt.y);
+            {
+                 FormMain->crossCenter.x-=1;
+                 FormMain->showCursorImg(FormMain->crossCenter.x,FormMain->crossCenter.y);
             }
             else if(pkbHookStruct->vkCode==VK_RIGHT)
-            {   
-                 POINT pt;
-                 GetCursorPos(&pt);
-                 pt.x+=1;
-                 SetCursorPos(pt.x,pt.y);
+            {
+                 FormMain->crossCenter.x+=1;
+                 FormMain->showCursorImg(FormMain->crossCenter.x,FormMain->crossCenter.y);
             }
         }
     }
