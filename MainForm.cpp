@@ -193,15 +193,38 @@ void TFormMain::copyColor()
 LRESULT CALLBACK KB_Hook_fn(int nCode,WPARAM wParam,LPARAM lParam)
 {
     if(HC_ACTION==nCode)
-    {                                                                                                                       
+    {
         KBDLLHOOKSTRUCT * pkbHookStruct=(KBDLLHOOKSTRUCT *)lParam;
         if(wParam==WM_KEYDOWN)
         {
+            /*if ( GetKeyState(VK_RCONTROL) )
+            {//Ë«»÷ALT
+                    static DWORD AltLastTime=0;
+                    DWORD AltcurrentTime = GetTickCount();
+                    if (AltcurrentTime - AltLastTime < 300)
+                    {
+                          BOOL temp=ShowWindow(FormMain->Handle, SW_HIDE);   //If the window was previously visible, the return value is nonzero.
+                          if (!temp)                              //If the window was previously hidden, the return value is zero.
+                          {
+                                  ShowWindow(FormMain->Handle, SW_SHOW);
+                          }
+                    }
+                    AltLastTime = AltcurrentTime;
+            }
+            if ( !FormMain->tmr->Enabled && GetKeyState(VK_CONTROL) )
+            {//Ë«»÷Ctrl
+                    static DWORD CtrlLastTime=0;
+                    DWORD CtrlcurrentTime = GetTickCount();
+                    if (CtrlcurrentTime - CtrlLastTime < 300)
+                    {
+                        FormMain->copyColor(); 
+                    }
+                    CtrlLastTime = CtrlcurrentTime;
+            }*/
             if(pkbHookStruct->vkCode==32)
             {//¿Õ¸ñ¼ü
                 if(FormMain->tmr->Enabled)
                 {
-                        FormMain->copyColor();
                         FormMain->endWatch();
                 }
                 else
