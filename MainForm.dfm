@@ -1,8 +1,8 @@
 object FormMain: TFormMain
-  Left = 570
-  Top = 167
-  Width = 225
-  Height = 250
+  Left = 1038
+  Top = 148
+  Width = 372
+  Height = 336
   BorderIcons = [biSystemMenu, biMinimize, biHelp]
   Caption = 'ColorPicker'
   Color = clBtnFace
@@ -21,25 +21,25 @@ object FormMain: TFormMain
   object pnlInfo: TPanel
     Left = 0
     Top = 0
-    Width = 209
-    Height = 66
+    Width = 356
+    Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object pnlColor: TPanel
-      Left = 144
+      Left = 256
       Top = 0
-      Width = 65
-      Height = 66
+      Width = 100
+      Height = 100
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
       DesignSize = (
-        65
-        66)
+        100
+        100)
       object imgLock: TImage
-        Left = 44
-        Top = 44
+        Left = 79
+        Top = 78
         Width = 16
         Height = 16
         Anchors = [akRight, akBottom]
@@ -88,21 +88,20 @@ object FormMain: TFormMain
     object pnlColorValue: TPanel
       Left = 0
       Top = 0
-      Width = 144
-      Height = 66
+      Width = 256
+      Height = 100
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
       object pnlRGB: TPanel
         Left = 0
         Top = 0
-        Width = 144
-        Height = 22
+        Width = 256
+        Height = 25
         Cursor = crHandPoint
         Hint = #28857#20987#22797#21046#39068#33394#20540
         Align = alTop
         BevelOuter = bvNone
-        Caption = 'RGB'
         Font.Charset = GB2312_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -113,17 +112,24 @@ object FormMain: TFormMain
         ShowHint = True
         TabOrder = 0
         OnClick = pnlRGBClick
+        object Label1: TLabel
+          Left = 0
+          Top = 0
+          Width = 51
+          Height = 25
+          Align = alLeft
+          Caption = '  RGB: '
+        end
       end
       object pnlHSB: TPanel
         Left = 0
-        Top = 44
-        Width = 144
-        Height = 22
+        Top = 75
+        Width = 256
+        Height = 25
         Cursor = crHandPoint
         Hint = #28857#20987#22797#21046#39068#33394#20540
         Align = alClient
         BevelOuter = bvNone
-        Caption = 'HSB'
         Font.Charset = GB2312_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -133,18 +139,25 @@ object FormMain: TFormMain
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
-        OnClick = pnlRGBClick
+        OnClick = pnlHSBClick
+        object Label4: TLabel
+          Left = 0
+          Top = 0
+          Width = 50
+          Height = 25
+          Align = alLeft
+          Caption = '  HSB: '
+        end
       end
       object pnlCMYK: TPanel
         Left = 0
-        Top = 22
-        Width = 144
-        Height = 22
+        Top = 50
+        Width = 256
+        Height = 25
         Cursor = crHandPoint
         Hint = #28857#20987#22797#21046#39068#33394#20540
         Align = alTop
         BevelOuter = bvNone
-        Caption = 'CMYK'
         Font.Charset = GB2312_CHARSET
         Font.Color = clWindowText
         Font.Height = -16
@@ -154,22 +167,58 @@ object FormMain: TFormMain
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
-        OnClick = pnlRGBClick
+        OnClick = pnlCMYKClick
+        object Label3: TLabel
+          Left = 0
+          Top = 0
+          Width = 66
+          Height = 25
+          Align = alLeft
+          Caption = '  CMYK: '
+        end
+      end
+      object pnlRGBNum: TPanel
+        Left = 0
+        Top = 25
+        Width = 256
+        Height = 25
+        Cursor = crHandPoint
+        Hint = #28857#20987#22797#21046#39068#33394#20540
+        Align = alTop
+        BevelOuter = bvNone
+        Font.Charset = GB2312_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -16
+        Font.Name = #24494#36719#38597#40657
+        Font.Style = []
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+        OnClick = pnlRGBNumClick
+        object Label2: TLabel
+          Left = 0
+          Top = 0
+          Width = 51
+          Height = 25
+          Align = alLeft
+          Caption = '  RGB: '
+        end
       end
     end
   end
   object pnlIMG: TPanel
     Left = 0
-    Top = 66
-    Width = 209
-    Height = 146
+    Top = 100
+    Width = 356
+    Height = 198
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 1
     object stat: TStatusBar
       Left = 0
-      Top = 127
-      Width = 209
+      Top = 179
+      Width = 356
       Height = 19
       Panels = <
         item

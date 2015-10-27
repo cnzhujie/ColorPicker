@@ -4,7 +4,7 @@
   <MACROS>
     <VERSION value="BCB.06.00"/>
     <PROJECT value="exe\ColorPicker.exe"/>
-    <OBJFILES value="lib\ColorPicker.obj lib\MainForm.obj lib\Color.obj"/>
+    <OBJFILES value="lib\ColorPicker.obj lib\MainForm.obj"/>
     <RESFILES value="ColorPicker.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -54,7 +54,6 @@
       <FILE FILENAME="ColorPicker.res" FORMNAME="" UNITNAME="ColorPicker.res" CONTAINERID="ResTool" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="ColorPicker.cpp" FORMNAME="" UNITNAME="ColorPicker" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
       <FILE FILENAME="MainForm.cpp" FORMNAME="FormMain" UNITNAME="MainForm" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
-      <FILE FILENAME="Color.cpp" FORMNAME="" UNITNAME="Color" CONTAINERID="CCompiler" DESIGNCLASS="" LOCALCOMMAND=""/>
   </FILELIST>
   <BUILDTOOLS>
   </BUILDTOOLS>

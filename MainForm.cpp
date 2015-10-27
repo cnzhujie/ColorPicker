@@ -108,10 +108,12 @@ void TFormMain::showCursorImg(int cx,int cy)
        color.setColor( GetPixel(hImgCursorDC, cx, cy )); 
        //显示像素值
        pnlRGB->Caption = color.getRGB();
+       pnlRGBNum->Caption = color.getRGBNUM();
        pnlHSB->Caption = color.getHSB();
        pnlCMYK->Caption = color.getCMYK();
        stat->Panels->Items[1]->Text = color.getRGB();
        pnlColor->Color = color.getTColor();
+
 
        HPEN hPen=CreatePen(PS_SOLID,1,RGB(255-color.r,255-color.g,255-color.b));
        HPEN hPenOld = ( HPEN )SelectObject(hImgCursorDC,hPen);
@@ -141,17 +143,45 @@ void TFormMain::showCursorImg(int cx,int cy)
 //---------------------------------------------------------------------------
 void __fastcall TFormMain::pnlRGBClick(TObject *Sender)
 {//复制颜色值
-       copyColor();
+       copyColor("RGB");
+}  
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::pnlRGBNumClick(TObject *Sender)
+{      
+       copyColor("RGBNUM");
+}
+//---------------------------------------------------------------------------
+
+
+void __fastcall TFormMain::pnlCMYKClick(TObject *Sender)
+{
+      copyColor("CMYK");
+}    
+//---------------------------------------------------------------------------
+
+void __fastcall TFormMain::pnlHSBClick(TObject *Sender)
+{
+      copyColor("HSB");
 }
 //=====================================================================
-void TFormMain::copyColor()
+void TFormMain::copyColor(AnsiString type)
 {
         if (!::OpenClipboard(this->Handle) || !::EmptyClipboard())
         {
              ShowMessage("复制失败");
              return;
         }
-        AnsiString str = color.getRGB();
+        AnsiString str = "";
+        if(type=="HSB"){
+                str = color.getHSB();
+        }else if(type=="CMYK"){
+                str = color.getCMYK();
+        }else if(type=="RGBNUM"){
+                str = color.getRGBNUM();
+        }else{
+                str = color.getRGB();
+        }
         //根据环境变量获取数据长度
         size_t cbStr = (str.Length() + 1) * sizeof(char);
 
@@ -187,6 +217,8 @@ void TFormMain::copyColor()
         //设置数据到剪贴板。执行成功，返回数据句柄，否则返回NULL
         SetClipboardData(uiFormat, hMem);
         CloseClipboard();
+
+        stat->Panels->Items[1]->Text = "已复制："+str;
 }
 //---------------------------------------------------------------------------
 //键盘钩子函数
@@ -217,7 +249,7 @@ LRESULT CALLBACK KB_Hook_fn(int nCode,WPARAM wParam,LPARAM lParam)
                     DWORD CtrlcurrentTime = GetTickCount();
                     if (CtrlcurrentTime - CtrlLastTime < 300)
                     {
-                        FormMain->copyColor(); 
+                        FormMain->copyColor("RGB"); 
                     }
                     CtrlLastTime = CtrlcurrentTime;
             }*/

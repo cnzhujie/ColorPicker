@@ -22,6 +22,10 @@ public:
         {
             return AnsiString("#")+IntToHex(r,2) + IntToHex(g,2) + IntToHex(b,2);
         }
+        AnsiString getRGBNUM()
+        {
+            return IntToStr(r)+","+IntToStr(g)+","+IntToStr(b);
+        }
         AnsiString getCMYK()
         {
                 float cyan = 255 - r;
